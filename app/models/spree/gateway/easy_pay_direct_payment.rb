@@ -71,7 +71,7 @@ module Spree
                       4012000077777777 4217651111111119 4500600000000061
                       4000111111111115 5454545454545454 5105105105105100
                       }
-        test_numbers.include?(strip(credit_card.number))
+        test_numbers.include?(credit_card.number)
     end
     def auth_net_gateway
       @_auth_net_gateway ||= begin
