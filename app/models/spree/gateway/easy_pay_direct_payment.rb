@@ -16,13 +16,19 @@ module Spree
     end
 
     def purchase(money_in_cents, source, gateway_options)
-      logger.info source
-      logger.info gateway_options
-
-      provider
-      response = provider.purchase(money_in_cents, source, gateway_options)
-      logger.info response
-      response
+      #check for test orders
+      logger.info source.number
+      logger.info test_card(source)
+      if self.preferred_server=='live' && test_card(source)
+        Class.new do
+          def success?; false; end
+          def message; 'Credit card is invalid, please try another one.'; end
+        end.new
+      else
+        provider
+        response = provider.purchase(money_in_cents, source, gateway_options)
+        response
+      end
     end
 
     def cancel(response_code)
@@ -43,6 +49,17 @@ module Spree
 
     private
 
+    def test_card(credit_card)
+        test_numbers = %w{
+                      378282246310005 371449635398431 378734493671000
+                      2223000048400011 2223520043560014 5555555555554444
+                      4111111111111111 4012888888881881 4222222222222
+                      4005519200000004 4009348888881881 4012000033330026
+                      4012000077777777 4217651111111119 4500600000000061
+                      4000111111111115 5454545454545454 5105105105105100
+                      }
+        test_numbers.include?(strip(credit_card.number))
+    end
     def auth_net_gateway
       @_auth_net_gateway ||= begin
         ActiveMerchant::Billing::Base.gateway_mode = preferred_server.to_sym
