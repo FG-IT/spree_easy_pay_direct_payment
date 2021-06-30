@@ -22,6 +22,9 @@ module Spree
         Class.new do
           def success?; false; end
           def message; 'Credit card is invalid, please try another one.'; end
+          def to_s
+             "#{message}"
+          end
         end.new
       else
         provider
@@ -36,6 +39,9 @@ module Spree
         Class.new do
           def success?; false; end
           def message; 'Credit card is invalid, please try another one.'; end
+          def to_s
+            "#{message}"
+          end
         end.new
       else
         provider
