@@ -15,10 +15,9 @@ module Spree
       super().merge(test: (self.preferred_server != "live"))
     end
 
+
     def purchase(money_in_cents, source, gateway_options)
       #check for test orders
-      logger.info source.number
-      logger.info test_card(source)
       if self.preferred_server=='live' && test_card(source)
         Class.new do
           def success?; false; end
@@ -27,6 +26,20 @@ module Spree
       else
         provider
         response = provider.purchase(money_in_cents, source, gateway_options)
+        response
+      end
+    end
+
+    def authorize(money_in_cents, source, gateway_options)
+      #check for test orders
+      if self.preferred_server=='live' && test_card(source)
+        Class.new do
+          def success?; false; end
+          def message; 'Credit card is invalid, please try another one.'; end
+        end.new
+      else
+        provider
+        response = provider.authorize(money_in_cents, source, gateway_options)
         response
       end
     end
