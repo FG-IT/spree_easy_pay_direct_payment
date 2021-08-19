@@ -7,6 +7,12 @@ module Spree
       self.test_url = 'https://secure.easypaydirectgateway.com/api/transrequest.php'
       self.live_url = 'https://secure.easypaydirectgateway.com/api/transrequest.php'
 
+      def initialize(options = {})
+        self.test_url = options[:test_url]
+        self.live_url = options[:live_url]
+        super
+      end
+      
       def add_credit_card(xml, credit_card, action)
         if credit_card.track_data
           add_swipe_data(xml, credit_card)

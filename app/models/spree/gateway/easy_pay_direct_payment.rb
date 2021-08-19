@@ -3,6 +3,8 @@ module Spree
     preference :login, :string
     preference :password, :string
     preference :server, :string, default: "test"
+    preference :test_url, :string, default: "https://secure.easypaydirectgateway.com/api/transrequest.php"
+    preference :live_url, :string, default: "https://secure.easypaydirectgateway.com/api/transrequest.php"
 
     def provider_class
       Spree::EasyPay::DirectPaymentGateway
@@ -84,6 +86,8 @@ module Spree
         ActiveMerchant::Billing::Base.gateway_mode = preferred_server.to_sym
         gateway_options = options
         gateway_options[:test_requests] = false # DD: never ever do test requests because just returns transaction_id = 0
+        gateway_options[:test_url] = preferred_test_url.to_sym
+        gateway_options[:live_url] = preferred_live_url.to_sym
         provider_class.new(gateway_options)
       end
     end
