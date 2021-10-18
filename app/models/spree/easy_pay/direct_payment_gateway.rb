@@ -12,7 +12,7 @@ module Spree
         self.live_url = options[:live_url]
         super
       end
-      
+
       def add_credit_card(xml, credit_card, action)
         if credit_card.track_data
           add_swipe_data(xml, credit_card)

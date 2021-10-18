@@ -65,7 +65,8 @@ module Spree
 
     def credit(amount, response_code, refund, gateway_options = {})
       gateway_options[:card_number] = refund[:originator].payment.source.last_digits
-      auth_net_gateway.refund(amount, response_code, gateway_options)
+      provider
+      provider.refund(amount, response_code, gateway_options)
     end
 
     private
